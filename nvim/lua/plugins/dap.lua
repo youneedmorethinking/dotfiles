@@ -36,7 +36,11 @@ return {
                     stopAtEntry = true,
                     args = function()
                         local args_str = vim.fn.input("Input args: ")
-                        return vim.split(args_str, " ")
+                        if args_str == "" then
+                            return {}
+                        else
+                            return vim.split(args_str, " ")
+                        end
                     end,
                     setupCommands = {
                         {
