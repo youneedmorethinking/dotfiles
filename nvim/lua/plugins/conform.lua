@@ -13,6 +13,7 @@ return {
             formatters_by_ft = {
                 lua = { "stylua" },
                 c = { "astyle" },
+                cpp = { "astyle" },
                 python = {
                     "autopep8",
                     "isort",
