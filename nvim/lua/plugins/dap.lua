@@ -25,35 +25,55 @@ return {
             dap.adapters.cppdbg = {
                 id = "cppdbg",
                 type = "executable",
-                command = "/home/mark/.local/share/nvim/mason/bin/OpenDebugAD7",
+                command = vim.fn.stdpath("data") .. "/mason/bin/OpenDebugAD7",
             }
-            dap.configurations.c = {
-                {
-                    name = "Launch file (cpptools gdb)",
-                    type = "cppdbg",
-                    request = "launch",
-                    program = function()
-                        return vim.fn.input(
-                            "Path to executable: ",
-                            vim.fn.getcwd() .. "/",
-                            "file"
-                        )
-                    end,
-                    cwd = "${workspaceFolder}",
-                    stopAtEntry = true,
-                    args = function()
-                        local args_str = vim.fn.input("Input args: ")
-                        if args_str == "" then
-                            return {}
-                        else
-                            return vim.split(args_str, " ")
-                        end
-                    end,
-                    symbolLoadInfo = {
-                        loadAll = false,
+
+            local default_configs = {
+                cpptools = {
+                    {
+                        name = "Default launch file",
+                        type = "cppdbg",
+                        request = "launch",
+                        program = function()
+                            return vim.fn.input(
+                                "Path to executable: ",
+                                vim.fn.getcwd() .. "/",
+                                "file"
+                            )
+                        end,
+                        cwd = "${workspaceFolder}",
+                        stopAtEntry = true,
+                        args = function()
+                            local args_str = vim.fn.input("Input args: ")
+                            if args_str == "" then
+                                return {}
+                            else
+                                return vim.split(args_str, " ")
+                            end
+                        end,
+                        symbolLoadInfo = {
+                            loadAll = false,
+                        },
                     },
                 },
             }
+
+            local function load_debug_config(adapter_type)
+                local config_file = vim.fn.input(
+                    "Input JSON's filename: ",
+                    vim.fn.getcwd() .. "/",
+                    "file"
+                )
+                if vim.fn.filereadable(config_file) == 1 then
+                    local config =
+                        vim.fn.json_decode(vim.fn.readfile(config_file))
+                    return config
+                else
+                    return default_configs[adapter_type]
+                end
+            end
+
+            dap.configurations.c = load_debug_config("cpptools")
             dap.configurations.cpp = dap.configurations.c
 
             dap.listeners.before.attach.dapui_config = function()
