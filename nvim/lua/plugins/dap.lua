@@ -18,7 +18,10 @@ return {
         config = function()
             local dap = require("dap")
             local dapui = require("dapui")
-            vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
+            vim.fn.sign_define(
+                "DapBreakpoint",
+                { text = "🛑", texthl = "", linehl = "", numhl = "" }
+            )
             dap.adapters.cppdbg = {
                 id = "cppdbg",
                 type = "executable",
@@ -30,7 +33,11 @@ return {
                     type = "cppdbg",
                     request = "launch",
                     program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                        return vim.fn.input(
+                            "Path to executable: ",
+                            vim.fn.getcwd() .. "/",
+                            "file"
+                        )
                     end,
                     cwd = "${workspaceFolder}",
                     stopAtEntry = true,
