@@ -42,12 +42,8 @@ return {
                             return vim.split(args_str, " ")
                         end
                     end,
-                    setupCommands = {
-                        {
-                            text = "-enable-pretty-printing",
-                            description = "enable pretty printing",
-                            ignoreFailures = false,
-                        },
+                    symbolLoadInfo = {
+                        loadAll = false,
                     },
                 },
             }
