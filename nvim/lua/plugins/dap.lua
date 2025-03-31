@@ -69,11 +69,7 @@ return {
             }
 
             local function load_debug_config(adapter_type)
-                local config_file = vim.fn.input(
-                    "Input JSON's filename: ",
-                    vim.fn.getcwd() .. "/",
-                    "file"
-                )
+                local config_file = "launch.json"
                 if vim.fn.filereadable(config_file) == 1 then
                     local config =
                         vim.fn.json_decode(vim.fn.readfile(config_file))
