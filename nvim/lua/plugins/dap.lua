@@ -2,22 +2,32 @@ return {
     {
         "mfussenegger/nvim-dap",
         dependencies = {
-            "rcarriga/nvim-dap-ui",
-            opts = {},
-            dependencies = { "nvim-neotest/nvim-nio" },
+            "igorlfs/nvim-dap-view",
+            opts = {
+                winbar = {
+                    sections = {
+                        "console",
+                        "watches",
+                        "exceptions",
+                        "breakpoints",
+                        "threads",
+                        "repl",
+                    },
+                },
+            },
             keys = {
                 {
-                    "<leader>dui",
+                    "<leader>dw",
                     function()
-                        require("dapui").toggle()
+                        require("dap-view").toggle(true)
                     end,
-                    desc = "Toggle dapui",
+                    desc = "Toggle dap-view window",
                 },
             },
         },
         config = function()
             local dap = require("dap")
-            local dapui = require("dapui")
+            local dv = require("dap-view")
             vim.fn.sign_define(
                 "DapBreakpoint",
                 { text = "🛑", texthl = "", linehl = "", numhl = "" }
@@ -76,11 +86,17 @@ return {
             dap.configurations.c = load_debug_config("cpptools")
             dap.configurations.cpp = dap.configurations.c
 
-            dap.listeners.before.attach.dapui_config = function()
-                dapui.open()
+            dap.listeners.before.attach["dap-view-config"] = function()
+                dv.open()
             end
-            dap.listeners.before.launch.dapui_config = function()
-                dapui.open()
+            dap.listeners.before.launch["dap-view-config"] = function()
+                dv.open()
+            end
+            dap.listeners.before.event_terminated["dap-view-config"] = function()
+                dv.close()
+            end
+            dap.listeners.before.event_exited["dap-view-config"] = function()
+                dv.close()
             end
         end,
         keys = {
