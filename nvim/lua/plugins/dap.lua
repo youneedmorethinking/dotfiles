@@ -135,24 +135,30 @@ return {
     },
     {
         "Weissle/persistent-breakpoints.nvim",
-        opts = {
-            load_breakpoints_event = { "BufReadPost" },
-        },
-        keys = {
-            {
-                "<F9>",
-                function()
-                    require("persistent-breakpoints.api").toggle_breakpoint()
-                end,
-                desc = "Set or delete the saved breakpoint",
-            },
-            {
-                "<leader><F9>",
-                function()
-                    require("persistent-breakpoints.api").clear_all_breakpoints()
-                end,
-                desc = "Clear all saved breakpoints in current buffer",
-            },
-        },
+        config = function()
+            local wk = require("which-key")
+            local pb_api = require("persistent-breakpoints.api")
+
+            require("persistent-breakpoints").setup({
+                load_breakpoints_event = { "BufReadPost" },
+            })
+
+            wk.add({
+                {
+                    "<F9>",
+                    function()
+                        require("persistent-breakpoints.api").toggle_breakpoint()
+                    end,
+                    desc = "Set or delete the saved breakpoint",
+                },
+                {
+                    "<leader><F9>",
+                    function()
+                        require("persistent-breakpoints.api").clear_all_breakpoints()
+                    end,
+                    desc = "Clear all saved breakpoints in current buffer",
+                },
+            })
+        end,
     },
 }
